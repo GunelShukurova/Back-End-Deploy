@@ -4,9 +4,12 @@ const cartoons = require("./data/cartoons");
 const cors = require("cors");
 const helmet = require("helmet");
 const { rateLimit } = require("express-rate-limit");
-require("dotenv").config();
+
 const PORT = process.env.PORT || 3001;
 
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
