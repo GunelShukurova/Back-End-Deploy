@@ -13,7 +13,9 @@ app.use(helmet());
 app.use(
     cors({
         origin: ["http://localhost:5173"],
-        methods: ["GET", "POST", "PUT", "PATCH", "DELETE"]
+        methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+            allowedHeaders: ["Content-Type", "api-key"], 
+             credentials: true
     })
 );
  const limiter = rateLimit({
