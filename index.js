@@ -4,18 +4,15 @@ const cartoons = require("./data/cartoons");
 const cors = require("cors");
 const helmet = require("helmet");
 const { rateLimit } = require("express-rate-limit");
+require("dotenv").config();
+const PORT = process.env.VITE_PORT || 3001;
 
-const PORT = process.env.PORT || 3001;
-
-if (process.env.NODE_ENV !== "production") {
-  require("dotenv").config();
-}
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
 app.use(
     cors({
-        origin: ["http://localhost:5173"],
+  origin: ["http://localhost:5173", "https://back-end-mu-two.vercel.app"],
         methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
             allowedHeaders: ["Content-Type", "api-key"], 
              credentials: true
@@ -32,13 +29,13 @@ app.use(
      res.setHeader("X-Frame-Options", "DENY");
        next(); 
  });
-
+  
 
 app.use((req, res, next) => {
     const apiKey = req.headers["api-key"];
     console.log("received api key:",apiKey);
     if (apiKey) {
-        if (apiKey === process.env.API_KEY) {
+        if (apiKey === process.env.VITE_API_KEY) {
             next();
         } else {
             res.status(403).json({
