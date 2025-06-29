@@ -5,14 +5,14 @@ const cors = require("cors");
 const helmet = require("helmet");
 const { rateLimit } = require("express-rate-limit");
 require("dotenv").config();
-const PORT = process.env.VITE_PORT || 3001;
 
+const PORT = process.env.PORT || 3001;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
 app.use(
     cors({
-  origin: ["http://localhost:5173", "https://back-end-mu-two.vercel.app"],
+  origin: ["http://localhost:5173", "https://back-end-zeta-dun.vercel.app"],
         methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
             allowedHeaders: ["Content-Type", "api-key"], 
              credentials: true
@@ -35,7 +35,7 @@ app.use((req, res, next) => {
     const apiKey = req.headers["api-key"];
     console.log("received api key:",apiKey);
     if (apiKey) {
-        if (apiKey === process.env.VITE_API_KEY) {
+   if (apiKey === process.env.API_KEY) {
             next();
         } else {
             res.status(403).json({
@@ -187,111 +187,111 @@ app.delete("/cartoons/:id", (req, res) => {
 
 
 
-// app.post(
-//   "/cartoons",
-//   (req, res, next) => {
-//     const { title, director, description, studio, releaseYear } = req.body;
-//     if (!title || !director || !description || !studio || !releaseYear) {
-//       return res.status(400).json({
-//         message: "Invalid cartoon schema!",
-//         success: false,
-//       });
-//     }
-//     next();
-//   },
-//   (req, res) => {
-//     try {
-//       const { title, director, description, studio, releaseYear } = req.body;
-//       const newCartoon = {
-//         id: cartoons.length > 0 ? +cartoons[cartoons.length - 1].id + 1 : 1,
-//         title,
-//         director,
-//         description,
-//         studio,
-//         releaseYear: Number(releaseYear),
-//       };
-//       cartoons.push(newCartoon);
-//       res.status(201).json({
-//         data: newCartoon,
-//         message: "Cartoon posted successfully!",
-//         success: true,
-//       });
-//     } catch (error) {
-//       res.status(500).json({
-//         message: error.message || "Internal server error!",
-//         success: false,
-//       });
-//     }
-//   }
-// );
+app.post(
+  "/cartoons",
+  (req, res, next) => {
+    const { title, director, description, studio, releaseYear } = req.body;
+    if (!title || !director || !description || !studio || !releaseYear) {
+      return res.status(400).json({
+        message: "Invalid cartoon schema!",
+        success: false,
+      });
+    }
+    next();
+  },
+  (req, res) => {
+    try {
+      const { title, director, description, studio, releaseYear } = req.body;
+      const newCartoon = {
+        id: cartoons.length > 0 ? +cartoons[cartoons.length - 1].id + 1 : 1,
+        title,
+        director,
+        description,
+        studio,
+        releaseYear: Number(releaseYear),
+      };
+      cartoons.push(newCartoon);
+      res.status(201).json({
+        data: newCartoon,
+        message: "Cartoon posted successfully!",
+        success: true,
+      });
+    } catch (error) {
+      res.status(500).json({
+        message: error.message || "Internal server error!",
+        success: false,
+      });
+    }
+  }
+);
 
 
-// app.patch("/cartoons/:id", (req, res) => {
-//   const { id } = req.params;
-//   const {  title, director, studio  } = req.body;
-//   try {
-//     const cartoon = cartoons.find((p) => p.id == id);
-//     if (cartoon) {
+app.patch("/cartoons/:id", (req, res) => {
+  const { id } = req.params;
+  const {  title, director, studio  } = req.body;
+  try {
+    const cartoon = cartoons.find((p) => p.id == id);
+    if (cartoon) {
      
-//       if (title) cartoon.title =title;
-//       if (director) cartoon.director = director;
-//       if (studio) cartoon.studio = studio;
+      if (title) cartoon.title =title;
+      if (director) cartoon.director = director;
+      if (studio) cartoon.studio = studio;
 
-//       const idx = cartoons.findIndex((p) => p.id == id);
-//       cartoons.splice(idx, 1, cartoon);
+      const idx = cartoons.findIndex((p) => p.id == id);
+      cartoons.splice(idx, 1, cartoon);
 
-//       res.status(200).json({
-//         message: "partial update successfully!",
-//         data: cartoon,
-//         success: true,
-//       });
-//     } else {
-//       res.status(404).json({
-//         message: "cartoon not found with given id!",
-//       });
-//     }
-//   } catch (error) {
-//     res.status(500).json({
-//       message: error.message || "internal server error!",
-//     });
-//   }
-// });
+      res.status(200).json({
+        message: "partial update successfully!",
+        data: cartoon,
+        success: true,
+      });
+    } else {
+      res.status(404).json({
+        message: "cartoon not found with given id!",
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      message: error.message || "internal server error!",
+    });
+  }
+});
 
 
-// app.put("/cartoons/:id", (req, res) => {
-//   const { id } = req.params;
-//   const { title, director,  studio, releaseYear } = req.body;
-//   try {
-//     const cartoon = cartoons.find((p) => p.id == id);
-//     if (cartoon) {
-//  if (title) {
-//   cartoon.title = title;
-// } else {
-//   delete cartoon.title;
-// }
-//       director
-//         ? (cartoon.director = director)
-//         : delete cartoon.director;
-//       studio ? (cartoon.studio = studio) : delete cartoon.studio;
-//         releaseYear ? (cartoon.releaseYear = releaseYear) : delete cartoon.releaseYear;
+app.put("/cartoons/:id", (req, res) => {
+  const { id } = req.params;
+  const { title, director,  studio, releaseYear } = req.body;
+  try {
+    const cartoon = cartoons.find((p) => p.id == id);
+    if (cartoon) {
+ if (title) {
+  cartoon.title = title;
+} else {
+  delete cartoon.title;
+}
+      director
+        ? (cartoon.director = director)
+        : delete cartoon.director;
+      studio ? (cartoon.studio = studio) : delete cartoon.studio;
+        releaseYear ? (cartoon.releaseYear = releaseYear) : delete cartoon.releaseYear;
 
-//       const idx = cartoons.findIndex((p) => p.id == id);
-//       cartoons.splice(idx, 1, cartoon);
-//       res.status(200).json({
-//         message: "cartoon updated successfully!",
-//         data: cartoon,
-//       });
-//     } else {
-//       res.status(404).json({
-//         message: "cartoon not found!",
-//       });
-//     }
-//   } catch (error) {
-//     res.status(500).json({
-//       message: error.message || "internal server error!",
-//     });
-//   }
-// });
+      const idx = cartoons.findIndex((p) => p.id == id);
+      cartoons.splice(idx, 1, cartoon);
+      res.status(200).json({
+        message: "cartoon updated successfully!",
+        data: cartoon,
+      });
+    } else {
+      res.status(404).json({
+        message: "cartoon not found!",
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      message: error.message || "internal server error!",
+    });
+  }
+});
 
 
 
